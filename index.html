@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Free IP Address Tracker – Find any public IP’s location, ISP, timezone and more instantly.">
+  <meta name="theme-color" content="#0f172a">
+  <title>IP Address Tracker</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="IP Address Tracker">
+  <meta property="og:description" content="Find any public IP’s location instantly. Clean, fast & privacy-friendly.">
+  <meta property="og:type" content="website">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📍</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="container header-inner">
+        <div class="logo">
+          <span class="logo-icon">📍</span>
+          <div>
+            <h1 class="logo-title">IP Address Tracker</h1>
+            <p class="logo-tagline">Find any public IP’s location instantly</p>
+          </div>
+        </div>
+        <button id="themeToggle" class="btn btn-icon" aria-label="Toggle dark mode" title="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="container">
+        <!-- Hero / Search -->
+        <section class="hero">
+          <h2 class="hero-title">Track any public IP address</h2>
+          <p class="hero-desc">Enter an IP or domain, or leave empty to see your own location.</p>
+
+          <form id="searchForm" class="search-form" autocomplete="off">
+            <div class="search-group">
+              <label for="ipInput" class="sr-only">IP address or domain</label>
+              <input
+                type="text"
+                id="ipInput"
+                class="search-input"
+                placeholder="Enter IP address or domain (e.g. 8.8.8.8)"
+                spellcheck="false"
+              >
+              <div class="search-actions">
+                <button type="submit" class="btn btn-primary" id="searchBtn">
+                  <span class="btn-text">Search</span>
+                </button>
+                <button type="button" class="btn btn-secondary" id="clearBtn">Clear</button>
+              </div>
+            </div>
+            <p class="helper-text">Leave empty to track your own IP</p>
+          </form>
+        </section>
+
+        <!-- Error message -->
+        <div id="errorBox" class="error-box" hidden role="alert"></div>
+
+        <!-- Loading skeleton -->
+        <div id="loadingSkeleton" class="result-card skeleton" hidden>
+          <div class="skeleton-line skeleton-ip"></div>
+          <div class="skeleton-grid">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
+
+        <!-- Result Card -->
+        <section id="resultSection" class="result-section" hidden>
+          <article class="result-card" id="resultCard">
+            <div class="result-header">
+              <div>
+                <p class="result-label">IP Address</p>
+                <h3 class="result-ip" id="resultIp">—</h3>
+              </div>
+              <div class="result-actions">
+                <button class="btn btn-secondary btn-sm" id="copyBtn" title="Copy IP">
+                  📋 Copy
+                </button>
+                <button class="btn btn-secondary btn-sm" id="shareBtn" title="Share result">
+                  🔗 Share
+                </button>
+              </div>
+            </div>
+
+            <div class="result-grid">
+              <div class="result-item">
+                <span class="result-label">Location</span>
+                <span class="result-value" id="resultLocation">—</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">ISP / Organization</span>
+                <span class="result-value" id="resultIsp">—</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Timezone</span>
+                <span class="result-value" id="resultTimezone">—</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Coordinates</span>
+                <span class="result-value" id="resultCoords">—</span>
+              </div>
+            </div>
+
+            <div class="result-footer">
+              <a id="mapsLink" class="btn btn-outline" href="#" target="_blank" rel="noopener">
+                🗺 Open in Google Maps
+              </a>
+            </div>
+          </article>
+
+          <!-- Map preview -->
+          <div class="map-section" id="mapSection">
+            <div class="map-container" id="mapContainer">
+              <img id="mapImage" class="map-image" alt="Location map" hidden>
+              <div class="map-placeholder" id="mapPlaceholder">
+                <span>Map will appear here</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Empty state -->
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">🌐</div>
+          <h3>Ready to track</h3>
+          <p>Your current IP will load automatically, or search any public IP address.</p>
+        </div>
+
+        <!-- History -->
+        <section class="history-section" id="historySection" hidden>
+          <div class="section-header">
+            <h3>Recent lookups</h3>
+            <button class="btn btn-text" id="clearHistoryBtn">Clear all</button>
+          </div>
+          <ul class="history-list" id="historyList"></ul>
+        </section>
+
+        <!-- Privacy note -->
+        <section class="privacy-note">
+          <h3>How it works & Privacy</h3>
+          <p>
+            This tool uses public IP geolocation data only. No personal information is collected or stored on any server.
+            Recent lookups are saved only in your browser (localStorage) and never leave your device.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p>Powered by <a href="https://ipapi.co" target="_blank" rel="noopener">ipapi.co</a> · Made with HTML, CSS & JS</p>
+        <p class="footer-small">Public IP data only · No tracking · No accounts</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
